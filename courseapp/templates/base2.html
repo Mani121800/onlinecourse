@@ -1,0 +1,169 @@
+<!doctype html>
+<html lang="en">
+<head>
+    {% load static %}
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="shortcut icon" href="{% static 'images/favicon.ico' %}" type="image/x-icon">
+    <title>Guru Tech</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-GLhlTQ8iRABdZLl6O3oVMWSktQOp6b7In1Zl3/Jr59b6EGGoI1aFkw7cmDA6j6gD" crossorigin="anonymous">
+    <link rel="icon" href="{% static 'images/icon1.jpeg' %}" type="image/jpeg">
+    <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+    <style>
+        @import url("https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800;900&display=swap");
+
+        body {
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+            background: linear-gradient(90deg, #FB37FF, #18B2DE);
+            font-family: "Poppins", sans-serif;
+            margin: 0;
+        }
+
+        .header {
+            width: 100%;
+            display: flex;
+            font-weight: bold;
+            font-size: 40px;
+            justify-content: space-between;
+            align-items: center;
+            padding: 5px;
+            background: rgba(0, 0, 0, 0.5);
+            color: white;
+            position: relative;
+            top: 0;
+            left: 0;
+        }
+
+        .logo {
+            width: 70px;
+            height: 70px;
+            margin-right: -5px;
+            border-radius: 50%;
+        }
+
+        .logo-container {
+            display: flex;
+            align-items: center;
+        }
+
+        .logo-text {
+            font-size: 40px;
+            margin-left: 10px;
+            color: white;
+            font-family: "Poppins", sans-serif;       
+            position: relative;
+            text-shadow: 0 0 10px orange; /* Glow effect */
+        }
+            
+        
+            
+
+        .dataTables_filter {
+            float: left !important;
+            text-align: left !important;
+        }
+
+        .dataTables_length {
+            float: right !important;
+            text-align: right !important;
+        }
+
+        .dt-buttons {
+            display: flex;
+            justify-content: center;
+            width: 100%;
+        }
+
+        .advanced-flag-display {
+            font-size: 40px;
+        }
+
+        .custom-container {
+            width: 80%;
+            max-width: 800px;
+            margin: 160px auto 20px auto;
+            background-color: rgba(255, 255, 255, 0.1);
+            border: 2px solid rgba(255, 255, 255, 0.2);
+            border-radius: 10px;
+            padding: 30px 20px;
+            color: #fff;
+            backdrop-filter: blur(10px);
+            box-shadow: 0 0 40px rgba(0, 0, 0, 0.5);
+            text-align: center;
+        }
+
+        .join-button {
+            width: 200px;
+            height: 70px;
+            font-size: 25px;
+            background-color: #000;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-top: 90px;
+        }
+
+        .join-button:hover {
+            background-color: #0056b3;
+        }
+
+        h1 {
+            color: #000;
+            text-align: center;
+            font-size: 30px;
+            font-family: "Texturina", serif;
+        }
+
+        .footer {
+            width: 100%;
+            padding: 20px;
+            text-align: center;
+            background: rgba(0, 0, 0, 0.5);
+            color: white;
+            margin-top: auto;
+        }
+
+        h3 {
+            color: #000;
+            text-align: center;
+            font-size: 20px;
+            font-family: "Texturina", serif;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <div class="logo-container">
+            <img src="..\..\static\images\gurutechlogo.jpeg" alt="Guru Tech Logo" class="logo">
+            <span class="logo-text">Guru Tech</span>
+        </div>
+        <div><a href="{% url 'login' %}" class="btn btn-danger" style="margin-right:20px;">Logout</a></div>
+    </div>
+
+    <h1 style= "margin: auto">WELCOME TO GURU TECH</h1>
+    <div class="container custom-container">
+        {% if messages %}
+            {% for message in messages %}
+                <div class="alert alert-warning alert-dismissible fade show" role="alert">
+                    {{ message }}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+            {% endfor %}
+        {% endif %}
+        {% block content %}
+        {% endblock %}
+    </div>
+
+    <div class="footer" style="margin-top: 20px;">
+        <p>© <span id="currentYear"></span> Guru tech. All rights reserved.</p>
+    </div>
+
+    <script>
+      // Set current year in the footer
+      document.getElementById("currentYear").innerText = new Date().getFullYear();
+    </script>
+</body>
+</html>

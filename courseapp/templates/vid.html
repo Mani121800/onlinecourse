@@ -1,0 +1,418 @@
+{% load static %}
+{% load custom_filters %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Gurutech</title>
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+  <link rel="stylesheet" href="https://cdn.plyr.io/3.6.12/plyr.css" />
+  <style>
+    @import url("https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800;900&display=swap");
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: "Poppins", sans-serif;
+    }
+
+    .bg-custom-nav {
+      background-color: #343a40; /* Dark background color for the navbar */
+    }
+
+     .container {
+    max-width: 95%;
+    padding-left: 0;
+    padding-right: 0;
+  }
+
+  .content-container, .sidebar {
+    padding-left: 15px;
+    padding-right: 15px;
+  }
+    .main-content {
+      padding: 20px;
+    }
+
+    
+
+    .sidebar h4 {
+      text-align: center;
+      margin-bottom: 20px;
+      font-weight: 600;
+    }
+
+    .playlist-container {
+  max-height: 500px; /* Adjust as needed */
+  overflow-y: auto;
+  border: 1px solid #eaeaea;
+  border-radius: 5px;
+  background-color: #fff;
+}
+
+.playlist-item {
+  display: flex;
+  align-items: center;
+  padding: 10px;
+  border-bottom: 1px solid #eaeaea;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.playlist-item:hover {
+  background-color: #f8f8f8;
+}
+
+.playlist-thumbnail {
+  width: 60px;
+  height: 60px;
+  margin-right: 15px;
+  border-radius: 4px;
+  object-fit: cover;
+}
+
+.playlist-details {
+  flex: 1;
+}
+
+.playlist-title {
+  font-size: 16px;
+  font-weight: 500;
+  margin-bottom: 5px;
+  color: #333;
+}
+
+.playlist-description {
+  font-size: 14px;
+  color: #666;
+}
+
+
+    .video-controls {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      width: 100%;
+      padding: 10px;
+      box-sizing: border-box;
+      z-index: 10;
+    }
+
+    .video-controls button {
+      color: #fff;
+      background-color: transparent;
+      border: none;
+      cursor: pointer;
+      font-size: 20px;
+    }
+
+    .video-controls button:hover {
+      color: #ccc;
+    }
+
+    .thumbnail {
+      max-width: 50%;
+      height: auto;
+      margin-bottom: 10px;
+      border-radius: 5px;
+    }
+
+    .logo {
+      width: 60px;
+      height: 60px;
+      margin-left: 1px;
+      align-items: left;
+      border-radius: 50%;
+      object-fit: cover;
+    }
+
+    #video-player {
+      width: 100%;
+      height: auto;
+    }
+
+    .video-container {
+      position: relative;
+    }
+
+    .video-controls {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      width: 100%;
+      padding: 10px;
+      box-sizing: border-box;
+      z-index: 10;
+    }
+
+    .video-controls button {
+      color: #fff;
+      background-color: transparent;
+      border: none;
+      cursor: pointer;
+      font-size: 20px;
+    }
+
+    .video-controls button:hover {
+      color: #ccc;
+    }
+
+    .description-container {
+      
+      margin-top: 20px;
+
+    }
+
+    .video-description {
+      padding: 10px;
+      background-color: white;
+      border-radius: 5px;
+    }
+.watermark {
+  position: absolute;
+  font-size: 16px;
+  color: black;
+  opacity: 0;
+  transition: opacity 0.5s;
+  pointer-events: none;
+  z-index: 10; /* Ensure it appears above the video */
+}
+
+  </style>
+</head>
+<body>
+  <nav class="navbar navbar-expand-lg navbar-dark bg-custom-nav">
+     <a class="navbar-brand nav1" href="#">
+      <img src="{% static 'images/gurutechlogo.jpeg' %}" class="logo" alt="Guru Tech">
+    
+    </a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarNav">
+      <ul class="navbar-nav ml-auto">
+        <li class="nav-item active">
+          {% comment %} <a class="nav-link" href="{% url 'home' %}">Home</a> {% endcomment %}
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="#">Courses</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="#">About</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="#">Contact</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="{% url 'logout' %}">Logout</a>
+        </li>
+      </ul>
+    </div>
+  </nav>
+ <div class="container mt-4">
+  <div class="row">
+    <div class="col-lg-8 content-container">
+      <!-- Video player and description -->
+      <div class="video-container">
+        <video id="video-player" class="embed-responsive-item plyr" controls>
+          {% if videos %}
+            {% for video in videos %}
+              <source src="{{ video.video_url.url }}" type="video/mp4">
+            {% endfor %}
+          {% else %}
+            <p>No videos available for this course.</p>
+          {% endif %}
+        </video>
+        <div class="video-controls">
+          <button onclick="playPreviousVideo()"><i class="fa fa-step-backward"></i></button>
+          <button onclick="playNextVideo()"><i class="fa fa-step-forward"></i></button>
+        </div>
+      </div>
+      <div class="watermark" id="watermark">{{ request.user.username }} ({{ request.user.email }})</div>
+      <div class="description-container">
+        <div id="video-description" class="video-description">
+          {% if videos %}
+            <h4>{{ videos.0.title }}</h4>
+            <p>{{ videos.0.description }}</p>
+          {% else %}
+            <p>No description available for this course.</p>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+    <div class="col-lg-4 sidebar">
+      <h4 class="text-center">Playlist</h4>
+      {% if videos %}
+        <div class="playlist-container">
+          <!-- Loop through all videos and create buttons with thumbnails -->
+          {% for video in videos %}
+            <div class="playlist-item" onclick="playVideo('{{ video.video_url.url }}', '{{ video.title }}', '{{ video.description }}')">
+              {% comment %} <img src="{{ video.thumbnail_url }}" alt="Thumbnail" class="playlist-thumbnail"> {% endcomment %}
+              <div class="playlist-details">
+                <div class="playlist-title">{{ video.title }}</div>
+                <div class="playlist-description">{{ video.description }}</div>
+              </div>
+            </div>
+          {% endfor %}
+        </div>
+      {% else %}
+        <p>No videos available for this course.</p>
+      {% endif %}
+    </div>
+  </div>
+</div>
+
+  <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.2/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="https://cdn.plyr.io/3.6.12/plyr.polyfilled.js"></script>
+<script>
+   document.addEventListener('DOMContentLoaded', () => {
+      const player = new Plyr('#video-player', {
+        controls: ['play', 'progress', 'current-time', 'mute', 'volume', 'speed', 'fullscreen'],
+        settings: ['speed'],
+        speed: { selected: 1, options: [0.5, 1, 1.5, 2] }
+      });
+    
+  var videos = [
+    {% for video in videos %}
+      {
+        url: "{{ video.video_url.url }}",
+        title: "{{ video.title }}",
+        description: "{{ video.description }}"
+      }{% if not forloop.last %},{% endif %}
+    {% endfor %}
+  ];
+
+  var currentIndex = 0;
+  var videoDescription = document.getElementById('video-description');
+  var watermarkTimerStarted = false;
+  var watermarkInterval;
+
+  function playVideo(url, title, description) {
+    player.source = {
+      type: 'video',
+      sources: [
+        {
+          src: url,
+          type: 'video/mp4'
+        }
+      ]
+    };
+    player.play();
+    updateVideoInfo(title, description);
+  }
+
+  function updateVideoInfo(title, description) {
+    videoDescription.innerHTML = `
+      <h4>${title}</h4>
+      <p>${description}</p>
+    `;
+  }
+
+  function playNextVideo() {
+    currentIndex = (currentIndex + 1) % videos.length;
+    var nextVideo = videos[currentIndex];
+    playVideo(nextVideo.url, nextVideo.title, nextVideo.description);
+  }
+
+  function playPreviousVideo() {
+    currentIndex = (currentIndex - 1 + videos.length) % videos.length;
+    var prevVideo = videos[currentIndex];
+    playVideo(prevVideo.url, prevVideo.title, prevVideo.description);
+  }
+
+  document.querySelectorAll('.playlist-item').forEach((item, index) => {
+    item.addEventListener('click', () => {
+      currentIndex = index;
+      var video = videos[index];
+      playVideo(video.url, video.title, video.description);
+    });
+  });
+
+  document.querySelector('.video-controls button[onclick="playNextVideo()"]').addEventListener('click', playNextVideo);
+  document.querySelector('.video-controls button[onclick="playPreviousVideo()"]').addEventListener('click', playPreviousVideo);
+
+  function getRandomPosition(videoPlayer, watermark) {
+    const videoRect = videoPlayer.getBoundingClientRect();
+    const watermarkWidth = watermark.offsetWidth;
+    const watermarkHeight = watermark.offsetHeight;
+
+    const x = Math.random() * (videoRect.width - watermarkWidth);
+    const y = Math.random() * (videoRect.height - watermarkHeight);
+
+    console.log(`Watermark position: x=${x}, y=${y}`);
+    return { x, y };
+  }
+
+  function showWatermark() {
+    const watermark = document.getElementById('watermark');
+    const videoPlayer = document.getElementById('video-player');
+
+    const { x, y } = getRandomPosition(videoPlayer, watermark);
+
+    watermark.style.left = x + 'px';
+    watermark.style.top = y + 'px';
+    watermark.style.opacity = 1;
+
+    console.log("Watermark shown");
+
+    setTimeout(() => {
+      if (!player.paused) {
+        watermark.style.opacity = 0;
+        console.log("Watermark hidden");
+      }
+    }, 3000);
+  }
+
+  function startWatermarkTimer() {
+    showWatermark();
+    watermarkInterval = setInterval(showWatermark, 10000);
+    console.log("Watermark timer started");
+  }
+
+  player.on('play', () => {
+    console.log("Video is playing");
+    if (!watermarkTimerStarted) {
+      startWatermarkTimer();
+      watermarkTimerStarted = true;
+    }
+    const watermark = document.getElementById('watermark');
+    watermark.style.opacity = 0;
+  });
+
+  player.on('pause', () => {
+    console.log("Video is paused");
+    const watermark = document.getElementById('watermark');
+    const { x, y } = getRandomPosition(videoPlayer, watermark);
+    watermark.style.left = x + 'px';
+    watermark.style.top = y + 'px';
+    watermark.style.opacity = 1;
+    clearInterval(watermarkInterval);
+    console.log("Watermark timer cleared");
+  });
+
+  window.addEventListener('resize', () => {
+    const watermark = document.getElementById('watermark');
+    const videoPlayer = document.getElementById('video-player');
+    const { x, y } = getRandomPosition(videoPlayer, watermark);
+    watermark.style.left = x + 'px';
+    watermark.style.top = y + 'px';
+    console.log("Watermark position updated on resize");
+  });
+});
+
+</script>
+
+</body>
+</html>

@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>{{ course.title }}</title>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            let videos = document.querySelectorAll('.video');
+            let currentVideoIndex = 0;
+
+            function playNextVideo() {
+                if (currentVideoIndex < videos.length) {
+                    videos[currentVideoIndex].play();
+                    currentVideoIndex++;
+                }
+            }
+
+            videos.forEach((video, index) => {
+                video.addEventListener('ended', playNextVideo);
+            });
+
+            playNextVideo(); // Start the first video
+        });
+    </script>
+</head>
+<body>
+    <h1>{{ course.title }}</h1>
+    <div>
+        {% for video in videos %}
+            <video class="video" width="640" height="360" controls>
+                <source src="{{ video.video_url }}" type="video/mp4">
+                Your browser does not support the video tag.
+            </video>
+        {% endfor %}
+    </div>
+</body>
+</html>
